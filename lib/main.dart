@@ -1,10 +1,13 @@
 import 'package:apiprac/Home.dart';
+import 'package:apiprac/services/network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
-  await ScreenUtil.ensureScreenSize();
   WidgetsFlutterBinding.ensureInitialized();
+  await ScreenUtil.ensureScreenSize();
+
   runApp(const MyApp());
 }
 
@@ -14,21 +17,27 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ApiCall()),
+      ],
+      child: ScreenUtilInit(
         designSize: const Size(deviceWidth, deviceHeight),
         minTextAdapt: true,
         builder: (context, child) {
           return MaterialApp(
             theme: ThemeData(
-              appBarTheme: AppBarTheme(
+              appBarTheme: const AppBarTheme(
                 iconTheme: IconThemeData(
-                  color: Color(0xFFFFFFFF), // Change to your desired color
+                  color: Color(0xFFFFFFFF),
                 ),
               ),
             ),
             debugShowCheckedModeBanner: false,
             home: Home(),
           );
-        });
+        },
+      ),
+    );
   }
 }
